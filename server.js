@@ -1,10 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-var app = express();
-var PORT = process.env.PORT || 8080;
+const app = express();
+const PORT = process.env.PORT || 8080;
+const methodOverride = require('method-override');
 
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(methodOverride('_method'));
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -34,6 +36,11 @@ app.post("/urls", (req, res) => {
   urlDatabase[theShortURL] = userEnteredURL;
 
   res.redirect(`http://localhost:8080/urls/${theShortURL}`);
+});
+
+app.delete("/urls/:id", (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect("/urls");
 });
 
 

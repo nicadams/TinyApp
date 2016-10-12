@@ -4,8 +4,9 @@
    <% include ../partials/_header %>
    <p>Click <a href="http://localhost:8080/urls/new">HERE</a> to shorten a new URL</p>
 
-    <% for (var i in urls) { %>
-        <ul><%= i %></ul>
+    <% for (var shortURL in urls) { %>
+        <li><%= shortURL %></li>
+        <ul><form method="POST" action="/urls/<%= shortURL %>?_method=DELETE"><button type="submit">DELETE</button></form></ul>
     <% }; %>
 </body>
 </html>
