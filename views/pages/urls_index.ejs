@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+   <% include ../partials/_header %>
+   <p>Click <a href="http://localhost:8080/urls/new">HERE</a> to shorten a new URL</p>
+
+    <% for (var i in urls) { %>
+        <ul><%= i %></ul>
+    <% }; %>
+</body>
+</html>
