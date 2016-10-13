@@ -29,6 +29,7 @@ function isLoggedIn(req) {
   return !!req.cookies['username'];  //checking user exists and returns boolean
 }
 
+
 app.get("/", (req, res) => {
   res.redirect("/urls")
 });
