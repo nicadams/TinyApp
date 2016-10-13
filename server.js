@@ -15,6 +15,10 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+var users = {
+
+};
+
 function generateRandomString() {
   var randomized = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -89,6 +93,27 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("username");
   res.redirect("/urls");
+});
+
+app.get("/register", (req, res) => {
+  res.render("pages/urls_register")
+});
+
+app.post("/register", (req, res) => {
+  let userRandomID = generateRandomString();
+  let email = req.body.email;
+  let password = req.body.password;
+
+  if (email === users.email) {
+    res.status(400).send('YOU ALREADY HAVE AN ACCOUNT, PLEASE LOGIN!');
+  } else if (email.length == 0 || password.length < 6) {
+      res.status(400).send('PLEASE ENTER REAL STUFF!');
+  } else {
+      res.cookie("user_id", userRandomID);
+      users[userRandomID] = {id: userRandomID, email: email, password: password};
+      res.redirect("/urls");
+  }
+
 });
 
 
