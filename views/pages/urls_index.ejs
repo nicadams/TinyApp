@@ -5,7 +5,7 @@
    <p>CLICK <a href="http://localhost:8080/urls/new">HERE</a> TO SHORTEN A NEW URL</p>
 
     <% for (var shortURL in urls) { %>
-        <li><%= shortURL %>: <%= urls[shortURL] %> // SHORT URL: <a href="http://localhost:8080/u/<%= shortURL %>">http://localhost:8080/u/<%= shortURL %></a></li>
+        <li><%= shortURL %>&#8594; <%= urls[shortURL] %> // <b>SHORT URL:</b> <a href="http://localhost:8080/u/<%= shortURL %>">http://localhost:8080/u/<%= shortURL %></a></li>
         <ul><form method="POST" action="/urls/<%= shortURL %>?_method=DELETE"><button type="submit">DELETE</button></form></ul>
         <ul><form method="GET" action="/urls/<%= shortURL %>"><button type="submit">EDIT</button></form></ul>
     <% }; %>

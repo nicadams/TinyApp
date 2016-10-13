@@ -50,23 +50,23 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let input = req.params.id;
-  let templateVars = { longURL: urlDatabase[input], shortURL: input };
+  let urlID = req.params.id;
+  let templateVars = { longURL: urlDatabase[urlID], shortURL: urlID };
   res.render("pages/urls_show", templateVars);
 });
 
 app.post("/urls/:id", (req, res) => {
-  let input = req.params.id;
-  let longURL = req.body.longURL;
-  urlDatabase[input] = longURL;
+  let urlID = req.params.id;
+  let newLongURL = req.body.longURL;
+  urlDatabase[urlID] = newLongURL;
   res.redirect("/urls");
 });
 
 
 
 app.get("/u/:id", (req, res) => {
-  let input = req.params.id;
-  let longURL = urlDatabase[input];
+  let urlID = req.params.id;
+  let longURL = urlDatabase[urlID];
   res.redirect(longURL);
 });
 
