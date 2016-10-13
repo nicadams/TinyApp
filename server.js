@@ -35,7 +35,7 @@ app.post("/urls", (req, res) => {
 
   urlDatabase[theShortURL] = userEnteredURL;
 
-  res.redirect(`http://localhost:8080/urls/${theShortURL}`);
+  res.redirect("/urls");
 });
 
 app.delete("/urls/:id", (req, res) => {
@@ -50,12 +50,22 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id };
+  let input = req.params.id;
+  let templateVars = { longURL: urlDatabase[input], shortURL: input };
   res.render("pages/urls_show", templateVars);
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  let input = req.params.shortURL;
+app.post("/urls/:id", (req, res) => {
+  let input = req.params.id;
+  let longURL = req.body.longURL;
+  urlDatabase[input] = longURL;
+  res.redirect("/urls");
+});
+
+
+
+app.get("/u/:id", (req, res) => {
+  let input = req.params.id;
   let longURL = urlDatabase[input];
   res.redirect(longURL);
 });

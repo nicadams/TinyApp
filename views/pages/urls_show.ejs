@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-
-
-        <ul><% shortURL %></ul>
+<h2>SHORT URL: <%= shortURL %></h2>
+<form action="/urls/<%= shortURL %>" method="POST" style="margin:150px;">
+      <label for="longURL">EDIT URL:</label>
+      <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>" style="width: 300px">
+      <input type="submit" value="UPDATE">
+    </form>
+</form>
 </body>
 </html>
