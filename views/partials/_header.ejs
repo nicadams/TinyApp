@@ -1,4 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+<body>
+<header>
 <h1>ITTY BITTY URL</h1>
+<form action="/login" method="POST" style="margin:0px;">
+    <% if (username == undefined || false) { %>
+      <h3>PLEASE LOGIN!</h3>
+
+    <% } else { %>
+
+    <h3>YOU'RE ALREADY LOGGED IN, <%= username %>!</h3>
+      <form method="POST" action="/logout"><button type="submit">LOGOUT</button></form><br>
+
+    <% }; %>
+      <label for="longURL">LOGIN:</label>
+      <input id="longURL" type="text" name="username" placeholder="USERNAME" style="width: 250px">
+      <input type="submit" value="LOGIN">
+    </form>
+    </header>
+</body>
+<br>
 </html>
