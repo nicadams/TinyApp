@@ -16,7 +16,10 @@ var urlDatabase = {
 };
 
 var users = {
-
+   av2BnY:
+   { id: 'av2BnY',
+     email: 'nic.adams@hotmail.com',
+     password: 'pleasehelp' }
 };
 
 function generateRandomString() {
@@ -39,7 +42,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  res.render("pages/urls_index", {urls: urlDatabase, username: req.cookies['username'] });
+  if (req.cookies.user_id == null) {
+    res.redirect("/login");
+    return;
+  } else {
+  let userId = req.cookies.user_id;
+  res.render("pages/urls_index", { urls: urlDatabase, user_email: users[userId].email });
+  }
 });
 
 
@@ -59,14 +68,15 @@ app.delete("/urls/:id", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  res.render("pages/urls_new", {username: req.cookies['username']});
+  let userId = req.cookies.user_id;
+  res.render("pages/urls_new", { user_email: users[userId].email});
 });
 
 
 app.get("/urls/:id", (req, res) => {
   let urlID = req.params.id;
-  console.log(req.cookies['username']);
-  let templateVars = { longURL: urlDatabase[urlID], shortURL: urlID, username: req.cookies['username'] };
+  let userId = req.cookies.user_id;
+  let templateVars = { longURL: urlDatabase[urlID], shortURL: urlID, user_email: users[userId].email };
   res.render("pages/urls_show", templateVars);
 });
 
@@ -84,14 +94,26 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
+app.get("/login", (req, res) => {
+  res.render("pages/urls_login");
+});
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/urls");
+  let email = req.body.email;
+  let password = req.body.password;
+
+  for (let id in users) {
+    if (users[id].email === email && users[id].password === password) {
+      res.cookie("user_id", id);
+      res.redirect("/urls");
+      return;
+    }
+  }
+  res.status(403).send('HMMM...WE CANNOT SEEM TO FIND YOU');
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
@@ -113,7 +135,6 @@ app.post("/register", (req, res) => {
       users[userRandomID] = {id: userRandomID, email: email, password: password};
       res.redirect("/urls");
   }
-
 });
 
 
