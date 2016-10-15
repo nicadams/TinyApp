@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const methodOverride = require('method-override');
+const bcrypt = require('bcrypt');
 var cookieParser = require('cookie-parser');
 
 app.set("view engine", "ejs");
@@ -16,11 +17,11 @@ var urlDatabase = {
 };
 
 var users = {
-   av2BnY:
-   { id: 'av2BnY',
-     email: 'nic.adams@hotmail.com',
-     password: 'pleasehelp' }
-};
+  DwiZCr:
+   { id: 'DwiZCr',
+     email: 'hey@hey.com',
+     password: '$2a$10$HmlBsLaYwqj7wZOwKqDwNustPsm2IPhuN1vn31jQDRHKBw1RhUjeC' }
+   }
 
 function generateRandomString() {
   var randomized = "";
@@ -101,9 +102,10 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+  let hashed_password = bcrypt.hashSync(password, 10);
 
   for (let id in users) {
-    if (users[id].email === email && users[id].password === password) {
+    if (users[id].email === email && bcrypt.compareSync(password, hashed_password)) {
       res.cookie("user_id", id);
       res.redirect("/urls");
       return;
@@ -125,6 +127,7 @@ app.post("/register", (req, res) => {
   let userRandomID = generateRandomString();
   let email = req.body.email;
   let password = req.body.password;
+  const hashed_password = bcrypt.hashSync(password, 10);
 
   if (email === users.email) {
     res.status(400).send('YOU ALREADY HAVE AN ACCOUNT, PLEASE LOGIN!');
@@ -132,7 +135,7 @@ app.post("/register", (req, res) => {
       res.status(400).send('PLEASE ENTER REAL STUFF!');
   } else {
       res.cookie("user_id", userRandomID);
-      users[userRandomID] = {id: userRandomID, email: email, password: password};
+      users[userRandomID] = {id: userRandomID, email: email, password: hashed_password};
       res.redirect("/urls");
   }
 });
