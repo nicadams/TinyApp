@@ -4,12 +4,15 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const methodOverride = require('method-override');
 const bcrypt = require('bcrypt');
-var cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['1Ar6U2RvS8ucHbxyM82KTRHF7T', 'KtH6XbmpdxFsSKqTScrw17M98rHVf25UFj']
+}));
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -43,11 +46,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  if (req.cookies.user_id == null) {
+  if (req.session.user_id == null) {
     res.redirect("/login");
     return;
   } else {
-  let userId = req.cookies.user_id;
+  let userId = req.session.user_id;
   res.render("pages/urls_index", { urls: urlDatabase, user_email: users[userId].email });
   }
 });
@@ -69,14 +72,14 @@ app.delete("/urls/:id", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  let userId = req.cookies.user_id;
+  let userId = req.session.user_id;
   res.render("pages/urls_new", { user_email: users[userId].email});
 });
 
 
 app.get("/urls/:id", (req, res) => {
   let urlID = req.params.id;
-  let userId = req.cookies.user_id;
+  let userId = req.session.user_id;
   let templateVars = { longURL: urlDatabase[urlID], shortURL: urlID, user_email: users[userId].email };
   res.render("pages/urls_show", templateVars);
 });
@@ -106,7 +109,7 @@ app.post("/login", (req, res) => {
 
   for (let id in users) {
     if (users[id].email === email && bcrypt.compareSync(password, hashed_password)) {
-      res.cookie("user_id", id);
+      req.session.user_id = id;
       res.redirect("/urls");
       return;
     }
@@ -115,7 +118,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  req.session = null;
   res.redirect("/urls");
 });
 
@@ -134,7 +137,7 @@ app.post("/register", (req, res) => {
   } else if (email.length == 0 || password.length < 6) {
       res.status(400).send('PLEASE ENTER REAL STUFF!');
   } else {
-      res.cookie("user_id", userRandomID);
+      req.session.user_id = userRandomID;
       users[userRandomID] = {id: userRandomID, email: email, password: hashed_password};
       res.redirect("/urls");
   }
