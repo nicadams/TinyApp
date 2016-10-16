@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<body>
-   <% include ../partials/_header %>
-   <p>CLICK <a href="http://localhost:8080/urls/new">HERE</a> TO SHORTEN A NEW URL</p>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
 
-    <% for (var shortURL in urls) { %>
-        <li><%= shortURL %>&#8594; <%= urls[shortURL] %> // <b>SHORT URL:</b> <a href="http://localhost:8080/u/<%= shortURL %>">http://localhost:8080/u/<%= shortURL %></a></li>
-        <ul><form method="POST" action="/urls/<%= shortURL %>?_method=DELETE"><button type="submit">DELETE</button></form></ul>
-        <ul><form method="GET" action="/urls/<%= shortURL %>"><button type="submit">EDIT</button></form></ul>
-    <% }; %>
-</body>
+    <style media="screen" type="text/css">
+      body {
+        padding-left: 20px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+    </style>
+
+  </head>
+  <body>
+     <% include ../partials/_header %>
+     <p>CLICK <a href="http://localhost:3000/urls/new">HERE</a> TO SHORTEN A NEW URL</p>
+
+      <% for (var shortURL in urls) { %>
+          <li><%= shortURL %>&#8594; <%= urls[shortURL] %> // <b>SHORT URL:</b> <a href="http://localhost:3000/u/<%= shortURL %>">http://localhost:3000/u/<%= shortURL %></a></li><br>
+          <ul><form method="GET" action="/urls/<%= shortURL %>"><button type="submit" class="btn btn-warning btn-sm">EDIT</button></form></ul>
+          <ul><form method="POST" action="/urls/<%= shortURL %>?_method=DELETE"><button type="submit" class="btn btn-danger btn-sm">DELETE</button></form></ul>
+
+
+      <% }; %>
+  </body>
 </html>

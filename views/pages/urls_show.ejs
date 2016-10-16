@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<body>
-<h2>SHORT URL: <%= shortURL %></h2>
-<form action="/urls/<%= shortURL %>" method="POST" style="margin:150px;">
-      <label for="longURL">EDIT URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>" style="width: 300px">
-      <input type="submit" value="UPDATE">
-    </form>
-</form>
-</body>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+
+    <style media="screen" type="text/css">
+      h2 {
+        padding: 30px 0 10px 30px;
+      }
+      #home {
+        padding-left: 30px;
+      }
+    </style>
+  </head>
+  <body>
+  <h2>SHORT URL: <%= shortURL %></h2>
+  <form method="GET" id="home" action="/"><button type="submit" class="btn btn-secondary">HOME</button></form>
+  <form action="/urls/<%= shortURL %>" method="POST" style="margin:150px;">
+        <label for="longURL">EDIT URL:</label>
+        <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>" style="width: 300px">
+        <input type="submit" value="UPDATE" class="btn btn-secondary btn-sm">
+      </form>
+  </form>
+  </body>
 </html>

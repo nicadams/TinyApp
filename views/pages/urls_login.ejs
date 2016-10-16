@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<body>
-  <header>
-    <h1>ITTY BITTY URL</h1>
-    <h3>LOGIN:</h3>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
 
-      <form action="/login" method="POST"">
-      <label for="email">E-MAIL:</label>
-      <input id="email" type="email" name="email" placeholder="E-MAIL" style="width: 250px">
-          <br><br>
-       <form action="/login" method="POST"">
-      <label for="password">PASSWORD:</label>
-      <input id="password" type="password" name="password" placeholder="PASSWORD " style="width: 220px">
-      <input type="submit" value="LOGIN">
-      <p>CLICK <a href="http://localhost:8080/register">HERE</a> TO JOIN THE REVOLUTION.</p>
+    <style media="screen" type="text/css">
+      header {
+        padding:50px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>ITTY BITTY URL</h1><br>
+      <h3>LOGIN:</h3><br>
 
-
-  </header>
-</body>
+        <form action="/login" method="POST"">
+        <label for="email">E-MAIL:</label>
+        <input id="email" type="email" name="email" placeholder="E-MAIL" style="width: 250px">
+            <br><br>
+         <form action="/login" method="POST"">
+        <label for="password">PASSWORD:</label>
+        <input id="password" type="password" name="password" placeholder="PASSWORD " style="width: 220px">
+        <input type="submit" class="btn btn-secondary btn-sm" value="LOGIN"></form><br>
+        <p>CLICK <a href="http://localhost:3000/register">HERE</a> TO JOIN THE REVOLUTION.</p>
+    </header>
+  </body>
 <br>
 </html>

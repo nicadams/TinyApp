@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <!-- EXTERNAL CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+    <!-- APP CSS -->
+    <style media="screen" type="text/css">
+    h1 {
+      font-size: 40px;
+      text-align: center;
+      padding: 25px;
+    }
+
+    h3 {
+      font-size: 25px;
+    }
+
+    #logout {
+      float: right;
+      padding-right: 50px;
+    }
+
+</style>
+</head>
 <body>
   <header>
-    <h1>ITTY BITTY URL</h1>
+    <h1 >ITTY BITTY URL</h1>
     <% if (user_email === undefined) { %>
       <h3>PLEASE LOGIN...OR REGISTER IF YOU ARE NOT A REGISTERED USER!</h3>
-      <p>CLICK <a href="http://localhost:8080/login">HERE</a> TO LOGIN</p>
-      <p>CLICK <a href="http://localhost:8080/register">HERE</a> TO REGISTER</p>
+      <p>CLICK <a href="http://localhost:3000/login">HERE</a> TO LOGIN</p>
+      <p>CLICK <a href="http://localhost:3000/register">HERE</a> TO REGISTER</p>
 
     <% } else { %>
 
-    <h3>WELCOME, <%= user_email %>!</h3>
-    <form method="POST" action="/logout"><button type="submit">LOGOUT</button></form><br>
-
+    <h3>OH HEY, <%= user_email %>!</h3>
+    <form method="POST" id="logout" action="/logout"><button type="submit" class="btn btn-secondary">LOGOUT</button></form>
+    <form method="GET" id="home" action="/"><button type="submit" class="btn btn-secondary">HOME</button></form>
     <% }; %>
 
   </header>
