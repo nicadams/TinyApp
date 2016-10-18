@@ -15,9 +15,15 @@ app.use(cookieSession({
 }));
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
+  "b2xVn2": {
+    longURL: "http://www.abc.com",
+    userId: "DwiZCr"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userId: "DwiZCr"
+  }
+}
 
 var users = {
   DwiZCr:
@@ -36,11 +42,6 @@ function generateRandomString() {
     return randomized;
 }
 
-function isLoggedIn(req) {
-  return !!req.cookies['username'];  //checking user exists and returns boolean
-}
-
-
 app.get("/", (req, res) => {
   res.redirect("/urls")
 });
@@ -50,18 +51,19 @@ app.get("/urls", (req, res) => {
     res.redirect("/login");
     return;
   } else {
-  let userId = req.session.user_id;
-  res.render("pages/urls_index", { urls: urlDatabase, user_email: users[userId].email });
-  }
+      let userId = req.session.user_id;
+      res.render("pages/urls_index", { urls: urlDatabase, user_email: users[userId].email });
+    }
 });
 
 
 app.post("/urls", (req, res) => {
   let theShortURL = generateRandomString();
   let userEnteredURL = req.body.longURL;
-
-  urlDatabase[theShortURL] = userEnteredURL;
-
+  urlDatabase[theShortURL] = {};
+  urlDatabase[theShortURL].longURL = userEnteredURL;
+  urlDatabase[theShortURL].userId = req.session.user_id;
+  console.log(urlDatabase);
   res.redirect("/urls");
 });
 
@@ -72,29 +74,45 @@ app.delete("/urls/:id", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  let userId = req.session.user_id;
-  res.render("pages/urls_new", { user_email: users[userId].email});
+  if (req.session.user_id == null) {
+    res.redirect("/login");
+    return;
+  } else {
+    let userId = req.session.user_id;
+    res.render("pages/urls_new", { user_email: users[userId].email});
+  }
 });
 
 
 app.get("/urls/:id", (req, res) => {
-  let urlID = req.params.id;
-  let userId = req.session.user_id;
-  let templateVars = { longURL: urlDatabase[urlID], shortURL: urlID, user_email: users[userId].email };
-  res.render("pages/urls_show", templateVars);
+    let urlID = req.params.id;
+    let userId = req.session.user_id;
+    for (var i in urlDatabase) {
+      console.log(req.session.user_id);
+        if (urlID !== i) {
+          res.status(404).send('THAT DOES NOT EXIST');
+        } else if (req.session.user_id == null) {
+          res.status(401).send('PLEASE LOGIN FIRST AT http://localhost:3000/login');
+        } else if (req.session.user_id !== urlDatabase[urlID].userId) {
+          res.status(403).send('YOU DO NOT OWN THAT URL');
+        } else {
+          let templateVars = { longURL: urlDatabase[urlID].longURL, shortURL: urlID, user_email: users[userId].email };
+          res.render("pages/urls_show", templateVars);
+        }
+    }
 });
 
 app.post("/urls/:id", (req, res) => {
   let urlID = req.params.id;
   let newLongURL = req.body.longURL;
-  urlDatabase[urlID] = newLongURL;
+  urlDatabase[urlID].longURL = newLongURL;
   res.redirect("/urls");
 });
 
 
 app.get("/u/:id", (req, res) => {
   let urlID = req.params.id;
-  let longURL = urlDatabase[urlID];
+  let longURL = urlDatabase[urlID].longURL;
   res.redirect(longURL);
 });
 

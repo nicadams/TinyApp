@@ -19,11 +19,9 @@
      <p>CLICK <a href="http://localhost:3000/urls/new">HERE</a> TO SHORTEN A NEW URL</p>
 
       <% for (var shortURL in urls) { %>
-          <li><%= shortURL %>&#8594; <%= urls[shortURL] %> // <b>SHORT URL:</b> <a href="http://localhost:3000/u/<%= shortURL %>">http://localhost:3000/u/<%= shortURL %></a></li><br>
+          <li><%= shortURL %>&#8594; <%= urls[shortURL].longURL %> // <b>SHORT URL:</b> <a href="http://localhost:3000/u/<%= shortURL %>">http://localhost:3000/u/<%= shortURL %></a></li><br>
           <ul><form method="GET" action="/urls/<%= shortURL %>"><button type="submit" class="btn btn-warning btn-sm">EDIT</button></form></ul>
           <ul><form method="POST" action="/urls/<%= shortURL %>?_method=DELETE"><button type="submit" class="btn btn-danger btn-sm">DELETE</button></form></ul>
-
-
       <% }; %>
   </body>
 </html>
