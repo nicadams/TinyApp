@@ -15,22 +15,22 @@ app.use(cookieSession({
 }));
 
 var urlDatabase = {
-  "b2xVn2": {
-    longURL: "http://www.abc.com",
-    userId: "DwiZCr"
-  },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userId: "DwiZCr"
-  }
+  // "b2xVn2": {
+  //   longURL: "http://www.abc.com",
+  //   userId: "DwiZCr"
+  // },
+  // "9sm5xK": {
+  //   longURL: "http://www.google.com",
+  //   userId: "DwiZCr"
+  // }
 }
 
 var users = {
-  DwiZCr:
-   { id: 'DwiZCr',
-     email: 'hey@hey.com',
-     password: '$2a$10$HmlBsLaYwqj7wZOwKqDwNustPsm2IPhuN1vn31jQDRHKBw1RhUjeC' }
-   }
+    DwiZCr:
+     { id: 'DwiZCr',
+       email: 'hey@hey.com',
+       password: '$2a$10$HmlBsLaYwqj7wZOwKqDwNustPsm2IPhuN1vn31jQDRHKBw1RhUjeC' }
+};
 
 function generateRandomString() {
   var randomized = "";
@@ -50,10 +50,15 @@ app.get("/urls", (req, res) => {
   if (req.session.user_id == null) {
     res.redirect("/login");
     return;
-  } else {
-      let userId = req.session.user_id;
-      res.render("pages/urls_index", { urls: urlDatabase, user_email: users[userId].email });
+  }
+  var filteredEntries = {};
+  for (var key in urlDatabase) {
+    if (urlDatabase[key].userId == req.session.user_id) {
+      filteredEntries[key] = urlDatabase[key]
     }
+  }
+  let userId = req.session.user_id;
+  res.render("pages/urls_index", { urls: filteredEntries, user_email: users[userId].email });
 });
 
 
@@ -87,7 +92,6 @@ app.get("/urls/:id", (req, res) => {
     let urlID = req.params.id;
     let userId = req.session.user_id;
     for (var i in urlDatabase) {
-      console.log(req.session.user_id);
         if (urlID !== i) {
           res.status(404).send('THAT DOES NOT EXIST');
         } else if (req.session.user_id == null) {
