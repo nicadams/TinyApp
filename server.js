@@ -25,6 +25,7 @@ var urlDatabase = {
   // }
 }
 
+
 var users = {
     DwiZCr:
      { id: 'DwiZCr',
@@ -42,23 +43,49 @@ function generateRandomString() {
     return randomized;
 }
 
+function isURLinDatabase(urlID, urlDatabase) {
+  for (var shortURL in urlDatabase) {
+    if (urlID === shortURL) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function doesUserExist (userId) {
+  return (userId === undefined)
+}
+
+function userIsOwner(urlDatabase, urlID, userId) {
+  // if (urlDatabase[urlID] && //urlID exists && user is owner
+  //     userId !== urlDatabase[urlID].userId)
+  // {
+  //   return true;
+  // }
+  // return false;
+  // equivalent
+
+  return (urlDatabase[urlID] &&
+      userId !== urlDatabase[urlID].userId);
+}
+
 app.get("/", (req, res) => {
   res.redirect("/urls")
 });
 
 app.get("/urls", (req, res) => {
-  if (req.session.user_id == null) {
+  if (req.session.user_id === undefined) {
     res.redirect("/login");
     return;
   }
-  var filteredEntries = {};
+  var filteredDatabase = {};
   for (var key in urlDatabase) {
     if (urlDatabase[key].userId == req.session.user_id) {
-      filteredEntries[key] = urlDatabase[key]
+      filteredDatabase[key] = urlDatabase[key]
     }
   }
   let userId = req.session.user_id;
-  res.render("pages/urls_index", { urls: filteredEntries, user_email: users[userId].email });
+  res.render("pages/urls_index", { urls: filteredDatabase, user_email: users[userId].email });
 });
 
 
@@ -88,22 +115,50 @@ app.get("/urls/new", (req, res) => {
 });
 
 
+
+
+/*
+  If visitor visits /urls/[some_short_url] then
+
+  if not logged in/registered, then get them to login/register
+
+  if current user isn't url owner, tell them they don't own url
+
+  check if shortURL is in database, if so load page with updated/edited input (url)
+
+  assuming shortURL not found, send 404.
+*/
 app.get("/urls/:id", (req, res) => {
-    let urlID = req.params.id;
-    let userId = req.session.user_id;
-    for (var i in urlDatabase) {
-        if (urlID !== i) {
-          res.status(404).send('THAT DOES NOT EXIST');
-        } else if (req.session.user_id == null) {
-          res.status(401).send('PLEASE LOGIN FIRST AT http://localhost:3000/login');
-        } else if (req.session.user_id !== urlDatabase[urlID].userId) {
-          res.status(403).send('YOU DO NOT OWN THAT URL');
-        } else {
-          let templateVars = { longURL: urlDatabase[urlID].longURL, shortURL: urlID, user_email: users[userId].email };
-          res.render("pages/urls_show", templateVars);
-        }
-    }
+  let urlID = req.params.id;
+  let userId = req.session.user_id;
+  //declarations
+
+  //check some conditions and return?
+  if (doesUserExist(userId)) {
+    res.status(401).send('PLEASE LOGIN FIRST AT http://localhost:3000/login');
+    return;
+  }
+
+  if (userIsOwner(urlDatabase, urlID, userId)) {
+    res.status(403).send('YOU DO NOT OWN THAT URL');
+    return;
+  }
+
+  if (isURLinDatabase(urlID, urlDatabase)) { // url found
+    let templateVars = {
+      longURL: urlDatabase[urlID].longURL,
+      shortURL: urlID,
+      user_email: users[userId].email
+    };
+    res.render("pages/urls_show", templateVars);
+    return;
+  }
+
+  res.status(404).send('THAT DOES NOT EXIST');
+  return;
 });
+
+
 
 app.post("/urls/:id", (req, res) => {
   let urlID = req.params.id;
