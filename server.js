@@ -88,7 +88,6 @@ app.get("/urls", (req, res) => {
   res.render("pages/urls_index", { urls: filteredDatabase, user_email: users[userId].email });
 });
 
-
 app.post("/urls", (req, res) => {
   let theShortURL = generateRandomString();
   let userEnteredURL = req.body.longURL;
@@ -103,7 +102,6 @@ app.delete("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
-
 app.get("/urls/new", (req, res) => {
   if (req.session.user_id == null) {
     res.redirect("/login");
@@ -113,10 +111,6 @@ app.get("/urls/new", (req, res) => {
     res.render("pages/urls_new", { user_email: users[userId].email});
   }
 });
-
-
-
-
 /*
   If visitor visits /urls/[some_short_url] then
 
@@ -131,7 +125,6 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let urlID = req.params.id;
   let userId = req.session.user_id;
-  //declarations
 
   //check some conditions and return?
   if (doesUserExist(userId)) {
@@ -158,15 +151,12 @@ app.get("/urls/:id", (req, res) => {
   return;
 });
 
-
-
 app.post("/urls/:id", (req, res) => {
   let urlID = req.params.id;
   let newLongURL = req.body.longURL;
   urlDatabase[urlID].longURL = newLongURL;
   res.redirect("/urls");
 });
-
 
 app.get("/u/:id", (req, res) => {
   let urlID = req.params.id;
